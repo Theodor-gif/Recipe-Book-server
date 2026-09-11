@@ -23,7 +23,10 @@ const recipeSchema = new Schema(
     ingredients: {
       type: [String],
       required: true,
-      default: [],
+      validate: {
+        validator: (arr) => arr.length > 0,
+        message: "At least one ingredient is required.",
+      },
     },
     photo: {
       type: String,

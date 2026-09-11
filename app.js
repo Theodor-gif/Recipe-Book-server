@@ -24,6 +24,35 @@ app.get("/recipes", async (req, res, next) => {
   }
 });
 
+app.post("/recipes", async (req, res, next) => {
+  try {
+    const { title, instructions, time, difficulty, ingredients } = req.body;
+
+    if (!title || !instructions || !time || !difficulty) {
+      return res
+        .status(400)
+        .json({
+          message: "Title, instructions, time, and difficulty are required.",
+        });
+    }
+
+    const newRecipe = await Recipe.create({
+      title,
+      description: instructions,
+      duration: time,
+      category: difficulty,
+      ingredients,
+    });
+
+    res.status(201).json(newRecipe);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "Error creating recipe", error: error.message });
+  }
+});
+
 connectDb().then(() => {
   app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
 });
